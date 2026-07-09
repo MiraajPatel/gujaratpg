@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Ghar Bachao — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #f6f1e9; --ink: #211b17; --ink-2: #4a413a; --muted: #8a7f70;
+      --line: #e2d8c7; --card: #fff; --terra: #c64b22; --green: #234b3b; --gold: #e0a63c;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Mukta', system-ui, sans-serif; background: var(--paper); color: var(--ink); }
+    header { position: sticky; top: 0; z-index: 5; background: var(--ink); color: var(--paper); padding: 1rem 1.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+    header h1 { font-size: 1.15rem; margin: 0; margin-right: auto; letter-spacing: 0.01em; }
+    header h1 span { color: var(--gold); }
+    .stats { display: flex; gap: 1.4rem; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat b { display: block; font-size: 1.4rem; line-height: 1; }
+    .stat span { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(246,241,233,0.7); }
+    .btn { border: 0; border-radius: 999px; padding: 0.6rem 1.1rem; font-family: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .btn-export { background: var(--gold); color: var(--ink); }
+    .btn-export:hover { filter: brightness(1.06); }
+    main { padding: 1.5rem; max-width: 1400px; margin: 0 auto; }
+    .filters { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+    .filters button { background: var(--card); border: 1.5px solid var(--line); color: var(--ink-2); border-radius: 999px; padding: 0.45rem 1rem; font-family: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+    .filters button.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 1.2rem 1.3rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(33,27,23,0.06); }
+    .card-top { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: baseline; margin-bottom: 0.6rem; }
+    .card-top .name { font-weight: 800; font-size: 1.1rem; }
+    .card-top .meta { color: var(--muted); font-size: 0.9rem; }
+    .badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.55rem; border-radius: 6px; }
+    .badge.pending { background: #f6e5c9; color: #8a5a12; }
+    .badge.approved { background: #cfe8dd; color: #1c5540; }
+    .badge.hidden { background: #eadad3; color: #8a4b34; }
+    .kv { display: grid; grid-template-columns: 140px 1fr; gap: 0.2rem 1rem; font-size: 0.94rem; margin: 0.4rem 0; }
+    .kv dt { color: var(--muted); font-weight: 600; }
+    .kv dd { margin: 0; }
+    .story-text { background: var(--paper); border-radius: 8px; padding: 0.8rem 1rem; margin: 0.7rem 0; white-space: pre-wrap; line-height: 1.55; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.4rem 0; }
+    .tag { font-size: 0.72rem; font-weight: 700; background: rgba(198,75,34,0.1); color: var(--terra); padding: 0.15rem 0.5rem; border-radius: 5px; }
+    .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--line); align-items: center; }
+    .actions .btn-approve { background: var(--green); color: #fff; }
+    .actions .btn-hide { background: #eadad3; color: #8a4b34; }
+    .actions .btn-pending { background: var(--card); border: 1.5px solid var(--line); color: var(--ink-2); }
+    .actions a.media { color: var(--terra); font-weight: 700; text-decoration: none; font-size: 0.9rem; }
+    .actions a.media:hover { text-decoration: underline; }
+    .consent-flag { font-size: 0.82rem; font-weight: 700; }
+    .consent-yes { color: var(--green); }
+    .consent-no { color: var(--muted); }
+    .empty, .loading { text-align: center; color: var(--muted); padding: 3rem 1rem; }
+    video { max-width: 320px; border-radius: 8px; margin-top: 0.6rem; background: #000; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span>घर बचाओ</span> · Admin</h1>
+    <div class="stats" id="stats"></div>
+    <a class="btn btn-export" href="/admin/export.xlsx">⬇ Export to Excel</a>
+  </header>
+  <main>
+    <div class="filters" id="filters">
+      <button data-filter="all" class="active">All</button>
+      <button data-filter="pending">Pending</button>
+      <button data-filter="approved">Approved</button>
+      <button data-filter="hidden">Hidden</button>
+    </div>
+    <div id="list"><p class="loading">Loading submissions…</p></div>
+  </main>
+  <script src="/js/admin.js" defer></script>
+</body>
+</html>

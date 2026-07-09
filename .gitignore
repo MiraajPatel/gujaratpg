@@ -1,0 +1,9 @@
+node_modules/
+data/
+uploads/
+.env
+*.log
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
