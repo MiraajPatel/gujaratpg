@@ -16,7 +16,7 @@ MAX_VIDEO_MB = "60"
 [[d1_databases]]
 binding = "DB"
 database_name = "gujaratpg"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "823d639c-6217-4235-8ab0-389d8affbf6d"
 
 # Object storage for uploaded videos. Create with: wrangler r2 bucket create gujaratpg-media
 [[r2_buckets]]
