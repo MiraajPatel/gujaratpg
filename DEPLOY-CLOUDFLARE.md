@@ -56,14 +56,15 @@ pick **`MiraajPatel/gujaratpg`**. Build settings:
 
 Deploy once. Pages auto-detects `functions/`.
 
-### 4. Bind D1 + R2 + set the admin password
+### 4. Bindings + set the admin password
 
-In the Pages project → **Settings → Functions** (or **Bindings**):
+Once `database_id` is filled in (step 1), **`wrangler.toml` already declares the
+`DB` and `MEDIA` bindings** — Pages reads it, so you don't need to add them in the
+dashboard. (If you'd rather not use `wrangler.toml`, set them under **Settings →
+Functions → Bindings** instead: `DB` → `gujaratpg`, `MEDIA` → `gujaratpg-media`.)
 
-- **D1 database binding:** variable `DB` → database `gujaratpg`
-- **R2 bucket binding:** variable `MEDIA` → bucket `gujaratpg-media`
-
-Then set the admin password as an **encrypted secret** (not a plain var):
+Set the admin password as an **encrypted secret** (never a plain var / never in
+`wrangler.toml`):
 
 ```bash
 wrangler pages secret put ADMIN_PASSWORD --project-name gujaratpg
