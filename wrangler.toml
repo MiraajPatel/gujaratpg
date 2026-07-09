@@ -1,0 +1,24 @@
+# Gujarat PG Org — Cloudflare Pages (Functions + D1 + R2) configuration.
+# The GitHub repo connects to Pages; static assets are served from public/ and
+# the API lives in functions/. Fill in database_id after you create D1 (see
+# DEPLOY-CLOUDFLARE.md). ADMIN_PASSWORD is a SECRET — never put it here; set it
+# with `wrangler pages secret put ADMIN_PASSWORD` or in the Pages dashboard.
+
+name = "gujaratpg"
+compatibility_date = "2024-11-06"
+pages_build_output_dir = "public"
+
+# Non-secret vars (safe to commit)
+[vars]
+MAX_VIDEO_MB = "60"
+
+# SQLite database (stories). Create with: wrangler d1 create gujaratpg
+[[d1_databases]]
+binding = "DB"
+database_name = "gujaratpg"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# Object storage for uploaded videos. Create with: wrangler r2 bucket create gujaratpg-media
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "gujaratpg-media"

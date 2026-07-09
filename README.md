@@ -48,28 +48,20 @@ Both folders are created automatically and are **not** committed to git.
 
 ## Put it online
 
-This is a standard Node app, so any host that runs Node + gives you a persistent
-disk works. Easiest options:
+**Production runs on Cloudflare Pages** (deployed from the GitHub repo) with the
+API as Pages Functions, **D1** for the stories database, and **R2** for uploaded
+videos — $0 to start, data persists, custom domain on `gujaratpg.org`.
 
-### Option A — Render.com / Railway.app (recommended, has free tier)
-1. Push this folder to a GitHub repo.
-2. Create a new **Web Service** from that repo.
-3. Build command: `npm install` · Start command: `npm start`.
-4. Add a **persistent disk** (e.g. mounted at the project folder) so `data/` and
-   `uploads/` survive restarts.
-5. Set environment variables: `ADMIN_PASSWORD` (strong password) and
-   `MAX_VIDEO_MB` (optional).
-6. Point your domain (e.g. `gujaratpg.org`) at it.
+👉 **Full step-by-step: [`DEPLOY-CLOUDFLARE.md`](DEPLOY-CLOUDFLARE.md)** (create
+D1 + R2, connect the repo, set `ADMIN_PASSWORD`, point the domain).
 
-### Option B — a VPS (DigitalOcean, Hetzner, etc.)
-1. Install Node 18+.
-2. Copy the folder up, run `npm install`, set `.env`.
-3. Run with a process manager: `pm2 start server.js --name gujarat-pg-org`.
-4. Put Nginx in front for HTTPS (Let's Encrypt).
+The Cloudflare backend lives in `functions/` (`schema.sql` + `wrangler.toml`
+configure D1/R2). `server.js` / `db.js` are the **legacy local Node/Express**
+version — handy for offline dev (`npm start`), not used in production.
 
-> **Before going public:** set a real `ADMIN_PASSWORD`, serve over **HTTPS**, and
-> consider your data-retention/consent policy since you're collecting personal
-> stories.
+> **Before going public:** set a strong `ADMIN_PASSWORD` secret, confirm HTTPS is
+> on (automatic on Pages), and decide your data-retention/consent policy since
+> you're collecting personal stories.
 
 ---
 
