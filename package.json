@@ -1,8 +1,8 @@
 {
-  "name": "ghar-bachao",
+  "name": "gujarat-pg-org",
   "version": "1.0.0",
   "private": true,
-  "description": "Ghar Bachao — a platform for PG & hostel residents across India to share their stories after evictions and shutdowns.",
+  "description": "Gujarat PG Org — a platform for PG & hostel residents in Gujarat to share their stories after evictions and shutdowns.",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {

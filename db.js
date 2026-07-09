@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * SQLite data layer for Ghar Bachao.
+ * SQLite data layer for Gujarat PG Org.
  * One table: `submissions`. Synchronous better-sqlite3 keeps this simple and
  * safe against the concurrent writes a public campaign form will receive.
  */

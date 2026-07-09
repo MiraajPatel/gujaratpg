@@ -144,7 +144,7 @@ function requireAdmin(req, res, next) {
     const pass = idx >= 0 ? decoded.slice(idx + 1) : decoded;
     if (timingSafeEqual(pass, ADMIN_PASSWORD)) return next();
   }
-  res.set('WWW-Authenticate', 'Basic realm="Ghar Bachao Admin", charset="UTF-8"');
+  res.set('WWW-Authenticate', 'Basic realm="Gujarat PG Org Admin", charset="UTF-8"');
   return res.status(401).send('Authentication required.');
 }
 
@@ -317,7 +317,7 @@ app.post('/api/admin/stories/:id/status', requireAdmin, (req, res) => {
 // Download everything as an Excel workbook.
 app.get('/admin/export.xlsx', requireAdmin, async (_req, res) => {
   const wb = new ExcelJS.Workbook();
-  wb.creator = 'Ghar Bachao';
+  wb.creator = 'Gujarat PG Org';
   const ws = wb.addWorksheet('Submissions');
 
   ws.columns = [
@@ -355,7 +355,7 @@ app.get('/admin/export.xlsx', requireAdmin, async (_req, res) => {
 
   const stamp = new Date().toISOString().slice(0, 10);
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-  res.setHeader('Content-Disposition', `attachment; filename="ghar-bachao-${stamp}.xlsx"`);
+  res.setHeader('Content-Disposition', `attachment; filename="gujarat-pg-org-${stamp}.xlsx"`);
   await wb.xlsx.write(res);
   res.end();
 });
@@ -381,7 +381,7 @@ function safeParse(json) {
 }
 
 app.listen(PORT, () => {
-  console.log(`\n  Ghar Bachao running → http://localhost:${PORT}`);
+  console.log(`\n  Gujarat PG Org running → http://localhost:${PORT}`);
   console.log(`  Admin dashboard     → http://localhost:${PORT}/admin`);
   if (ADMIN_PASSWORD === 'changeme') {
     console.warn('  ⚠  ADMIN_PASSWORD is the default "changeme" — set it in .env before going live.\n');

@@ -1,7 +1,7 @@
 'use strict';
 
 /* ==========================================================================
-   Ghar Bachao — front-end behaviour
+   Gujarat PG Org — front-end behaviour
    ========================================================================== */
 
 const MAX_VIDEO_MB = 60;
@@ -301,7 +301,7 @@ const shareBtn = document.getElementById('share-btn');
 if (shareBtn) {
   shareBtn.addEventListener('click', async () => {
     const shareData = {
-      title: 'Ghar Bachao',
+      title: 'Gujarat PG Org',
       text: 'PG & hostel residents are being evicted overnight. Share your story.',
       url: location.origin,
     };

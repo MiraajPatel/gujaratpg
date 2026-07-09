@@ -1,6 +1,6 @@
-# घर बचाओ · Ghar Bachao
+# Gujarat PG Org
 
-A website for **PG & hostel residents across India** to share their stories after
+A website for **PG & hostel residents across Gujarat** to share their stories after
 sudden shutdowns and evictions. Residents submit their name, phone, city, PG name,
 the problems they face, what they want, their story, and an optional **video**
 (uploaded file or a link). Everything is saved to a database you can **export to
@@ -59,12 +59,12 @@ disk works. Easiest options:
    `uploads/` survive restarts.
 5. Set environment variables: `ADMIN_PASSWORD` (strong password) and
    `MAX_VIDEO_MB` (optional).
-6. Point your domain (e.g. `gharbachao.in`) at it.
+6. Point your domain (e.g. `gujaratpg.org`) at it.
 
 ### Option B — a VPS (DigitalOcean, Hetzner, etc.)
 1. Install Node 18+.
 2. Copy the folder up, run `npm install`, set `.env`.
-3. Run with a process manager: `pm2 start server.js --name ghar-bachao`.
+3. Run with a process manager: `pm2 start server.js --name gujarat-pg-org`.
 4. Put Nginx in front for HTTPS (Let's Encrypt).
 
 > **Before going public:** set a real `ADMIN_PASSWORD`, serve over **HTTPS**, and
@@ -76,7 +76,7 @@ disk works. Easiest options:
 ## Get your Excel sheet
 
 Log in to `/admin` and click **⬇ Export to Excel**. You get
-`ghar-bachao-YYYY-MM-DD.xlsx` with every submission — name, phone, email, city,
+`gujarat-pg-org-YYYY-MM-DD.xlsx` with every submission — name, phone, email, city,
 PG, problems, story, what they want, video references, consent, and status.
 
 ---
@@ -87,7 +87,9 @@ Node + Express · SQLite (`better-sqlite3`) · Multer (video upload) ·
 ExcelJS (export) · Helmet + rate limiting. No build step, no framework —
 `node server.js` and it runs.
 
-## Rename the movement
+## Name & domains
 
-The working name is **Ghar Bachao**. To change it, edit the brand text in
-`public/index.html` (search for `घर बचाओ` / `Ghar Bachao`) and the footer.
+The public name is **Gujarat PG Org**. Primary domain **`gujaratpg.org`**
+(`.in` and `.com` are also available — worth registering to lock down the brand).
+To rename again, edit the brand text in `public/index.html` (the `.brand-hi` /
+`.brand-en` spans + `<title>`), the footer, and `public/admin.html`.
