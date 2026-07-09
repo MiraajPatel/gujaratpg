@@ -107,6 +107,19 @@ and `.wrangler/` are gitignored.
 
 ---
 
+## Live Google Sheet (auto-updating spreadsheet)
+
+Every submission also appends a row to a Google Sheet in real time, so you have a
+living spreadsheet (open it, sort/filter, download as `.xlsx` anytime). Setup:
+
+1. Google Sheet -> Extensions -> Apps Script -> paste [`docs/google-sheet-webhook.gs`](docs/google-sheet-webhook.gs), set `TOKEN`.
+2. Deploy -> New deployment -> **Web app** -> Execute as **Me**, Who has access **Anyone** -> copy the `/exec` URL.
+3. In the Pages project add two **secrets**: `SHEETS_WEBHOOK_URL` (the `/exec` URL) and `SHEETS_TOKEN` (same as `TOKEN`), then redeploy.
+
+`functions/api/stories.js` fires the webhook via `waitUntil` (fire-and-forget) — a
+slow or unreachable sheet never delays or fails a resident's submission. If the
+secrets are unset, it simply no-ops.
+
 ## Notes / decisions
 
 - **Excel export is CSV.** The old Node app used ExcelJS, which doesn't run on
