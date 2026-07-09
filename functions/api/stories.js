@@ -9,7 +9,7 @@ const HOUR_MS = 60 * 60 * 1000;
 const MAX_PER_IP_PER_HOUR = 8;
 
 // Submit a story (multipart form, optional video file OR external link).
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost({ request, env, waitUntil }) {
   const maxVideoMb = Number(env.MAX_VIDEO_MB || 60);
 
   let form;
@@ -74,6 +74,7 @@ export async function onRequestPost({ request, env }) {
 
   const consentRaw = g('consent_public');
   const consent_public = (consentRaw === 'true' || consentRaw === 'on' || consentRaw === '1') ? 1 : 0;
+  const problemsArr = parseProblems(form.getAll('problems'));
 
   const row = {
     id: nanoid(),
@@ -87,7 +88,7 @@ export async function onRequestPost({ request, env }) {
     pg_area: clean(g('pg_area'), 160),
     resident_type: clean(g('resident_type'), 40),
     duration: clean(g('duration'), 60),
-    problems: JSON.stringify(parseProblems(form.getAll('problems'))),
+    problems: JSON.stringify(problemsArr),
     story,
     what_they_want: clean(g('what_they_want'), 4000),
     video_file,
@@ -114,6 +115,37 @@ export async function onRequestPost({ request, env }) {
   } catch {
     if (video_file) { try { await env.MEDIA.delete(video_file); } catch { /* best effort */ } }
     return json({ ok: false, error: 'SERVER_ERROR' }, 500);
+  }
+
+  // Mirror every submission to the live Google Sheet (fire-and-forget: a slow or
+  // unreachable sheet must never delay or fail the resident's submission).
+  if (env.SHEETS_WEBHOOK_URL) {
+    const origin = new URL(request.url).origin;
+    const sheetRow = {
+      created_at: row.created_at,
+      full_name: row.full_name,
+      phone: row.phone,
+      email: row.email,
+      city: row.city,
+      state: row.state,
+      pg_name: row.pg_name,
+      pg_area: row.pg_area,
+      resident_type: row.resident_type,
+      duration: row.duration,
+      problems: problemsArr.join(', '),
+      story: row.story,
+      what_they_want: row.what_they_want,
+      video: row.video_file ? `${origin}/media/${row.id}` : (row.video_link || ''),
+      consent_public: row.consent_public ? 'YES' : 'no',
+      status: row.status,
+      id: row.id,
+    };
+    const push = fetch(env.SHEETS_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: env.SHEETS_TOKEN || '', row: sheetRow }),
+    }).catch(() => {});
+    if (typeof waitUntil === 'function') waitUntil(push);
   }
 
   return json({ ok: true, id: row.id });
